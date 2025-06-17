@@ -22,7 +22,7 @@ WORKDIR /app
 
 RUN npm install -g serve@latest
 
-COPY --from=builder /app/dist ./dist
+# COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
