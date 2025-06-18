@@ -50,6 +50,7 @@
   max-height: 65px;
   min-height: 65px;
   overflow: hidden;
+  /* obs obs */
   font-size: 24px;
   font-weight: 400;
   margin-bottom: var(--cx-spacing-2);

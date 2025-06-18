@@ -8,12 +8,13 @@
 1. Kjør `npm run dev`
 
 # Vise og filtrere erfaringer
+Vi bruker Computas sitt egne designsystem for styling av diverse komponenter. Les mer om det her: https://designsystem.computas.com/
 
 ## Oppgave 1 - Routing: Legg til "Erfaringer" som en route
 
-Vi skal nå lage en ny side som viser alle erfaringene du har i databasen din. Vi må kunne navigere til denne siden, noe vi gjør med å lage en ny route ved siden av "Om meg" som linker til den nye siden vår.
+Vi skal nå lage en ny side som viser alle erfaringene du har i databasen din. Vi må kunne navigere til denne siden, noe vi gjør med å lage en ny route ved siden av "Om meg" som linker til den nye siden vår. 
 
-1. Legg til en ny route i `App.tsx` for Erfaringer med `path="/experiences"`
+1. Legg til en ny route i `App.tsx` for Erfaringer med `path="/experiences"` og en komponent `Experiences`. Denne tasken vil ikke gi noen synlige endringer, men dersom du skriver inn url'en `http://localhost:5173/experiences`, så ser du at urlen er gyldig. Før dette steget, ville den samme url'en lede til en 404-side.
 
 <details>
 <summary>Vis løsning</summary>
@@ -29,11 +30,11 @@ path="/" viser forsiden. path="\*" fanger opp alle ukjente ruter – nyttig for 
 
 </details>
 
-2. Legg til Erfaringer i `MainHeader.tsx` som en ny tab
+2. Legg til Erfaringer i `MainHeader.tsx` som en ny tab, slik at vi når siden uten å endre url'en. 
 
 <details>
 <summary>Vis løsning</summary>
-Her bruker vi `NavLink`-komponenten fra react-router-dom for å lage en lenke til Erfaringer. NavLink fungerer som en Link-komponent, men legger til en aktive state når gjeldende URL samsvarer med lenken. Dette kan man bruke til å style lenken til siden som er aktiv.
+Her bruker vi `NavLink`-komponenten fra react-router-dom for å lage en lenke til Erfaringer. NavLink fungerer som en Link-komponent, men legger til en aktive state når gjeldende URL samsvarer med lenken. Dette kan man bruke til å style lenken til siden som er aktiv. Den får stylingen `cx-tab cx-tab--active` når den er aktiv, og `cx-tab` når den ikke er aktiv. Disse styling-klassene kommer fra designsystemt til Computas. 
 
 ```tsx
 // TODO Oppgave 1: Legg til Erfaringer som en tab
@@ -49,7 +50,9 @@ Her bruker vi `NavLink`-komponenten fra react-router-dom for å lage en lenke ti
 
 ## Oppgave 2 - Intro til tanstack query: Hente alle erfaringene fra backend
 
-Litt info om tanstack query: https://tanstack.com/query
+TanStack Query er et React-bibliotek som gjør det enkelt å hente og holde ekstern data oppdatert. Det løser problemer som manuell håndtering av API-kall, lasting, feil og caching, og gir en mer effektiv og ryddig måte å jobbe med data på i frontend.
+
+Mer info om tanstack query: https://tanstack.com/query
 
 Nå brukes hooken fra `useExperiences.ts` for å hente alle erfaringene i `Experiences.tsx`. Tanstack hånterer også mange innebyde states, som loading mens data hentes og error hvis det går feil. Vi skal håndtere disse i vår frontend.
 
@@ -81,39 +84,57 @@ if (error) {
 
 ## Oppgave 3 - Vis alle erfaringene i erfaring siden
 
-1. Vis alle erfaringene i `Experiences.tsx` ved å mappe gjennom experiences og rendre et ExperienceCard for hver experience.
+1. Vis alle erfaringene i `Experiences.tsx` ved å mappe gjennom experiences, og rendre en p-tag med experience.title for hver erfaring.
 
 <details>
-<summary>Vis løsning</summary>
-I denne oppgaven bruker vi `map()` for å loope gjennom experiences og rendre et `ExperienceCard` per element.
+<summary>Vis løsning for 3.1</summary>
+I denne oppgaven bruker vi `map()` for å loope gjennom experiences og rendre et `p`-tag med `experience.title` for hver erfaring.
 
 > **Visste du dette?**  
 > Vi bruker `map()` i stedet for `forEach()` fordi `map()` returnerer en ny array som vi kan bruke til å rendre JSX-komponenter. `forEach()` utfører en handling for hvert element, men returnerer ingenting.
 
 ```tsx
 // TODO Oppgave 3.1: Vis alle erfaringene
-return (
-  <div className={styles.container}>
+
     {experiences.map((experience) => (
-      <ExperienceCard key={experience.id} experience={experience} />
+      <p key={experience.id}>{experience.title}</p>
     ))}
-  </div>
-);
 ```
 
 </details>
 
+
+2. Nå skal vi bruke en ferdiglaget komponent for å få hver erfaring til å se litt freshere ut. Endre mappingen fra å returnere en p-tag til og heller returnere et `ExperienceCard`.
+
+<details>
+<summary>Vis løsning for 3.2</summary>
+
+```tsx
+// TODO Oppgave 3.2: Vis alle erfaringene med ExperienceCard
+
+    {experiences.map((experience) => (
+      <ExperienceCard key={experience.id} experience={experience} />
+    ))}
+```
+
+</details>  
+
 ## Oppgave 4 - Sorter erfaringene
 
-1. Sorter erfaringene på dato i `Experiences.tsx` ved å bruke `sort` på experiences.
+1. Sorter erfaringene på dato i `Experiences.tsx` ved å bruke `sort` på experiences. Se mer om dette her: https://arc.net/l/quote/ggmncfoh. Dette gjøres før vi mapper gjennom erfaringene.
+
+<details>
+<summary>Hint</summary>
+startDate kommer som en string fra db, så først må vi konvertere den til et Date-objekt. Dette kan gjøres med `new Date(experience.startDate)`. 
+
+Date-metoden `getTime()` returnerer antall millisekunder siden 1. Jan 1970. Dette er en vanlig måte å sammenligne datoer på. Les mer om det her: https://www.w3schools.com/jsref/jsref_gettime.asp
+</details>
 
 <details>
 <summary>Vis løsning</summary>
 
 ```tsx
 // TODO Oppgave 4.1: Sorter erfaringene
-return (
-  <div className={styles.container}>
     {experiences
       .sort(
         (a, b) =>
@@ -122,9 +143,8 @@ return (
       .map((experience) => (
         <ExperienceCard key={experience.id} experience={experience} />
       ))}
-  </div>
-);
 ```
+Våre erfaringer kommer ferdig sortert, men gjerne prøv å bytte rekkefølgen på sorteringen ved å endre rekkefølgen på `a` og `b`.
 
 </details>
 
@@ -132,14 +152,24 @@ return (
 
 Vi skal nå legge til filtrering av erfaringer etter type. Dette kan gjøres via å lagre en state med valgte type. Vi skal derfor bruke `useState`.
 
-1. Som dere kanskje ser, så funker ikke filtrering akkurat nå. Det er fordi staten aldri blir oppdatert. cxSelect-komponenten har en `handleSelectChange` funksjon som console.loger valgte type. Oppdater funksjonen `handleSelectChange` så staten endres når man velger type i selecten.
-2. Endre mappingen av erfaringen slik at den bruker filteredExperiences istedenfor experiences.
+1. Som dere kanskje ser, så funker ikke filtrering akkurat nå. Det er fordi staten `selectedExperience` aldri blir oppdatert. cxSelect-komponenten har en `handleSelectChange` funksjon som console.loger valgte type. Oppdater funksjonen `handleSelectChange` så staten endres når man velger type i selecten.
+2. Endre mappingen av erfaringen slik at den bruker filteredExperiences() istedenfor experiences. NB: husk å fjerne kommenteringen av filteredExperiences()
 <details>
 <summary>Vis løsning</summary>
 
 ```tsx
 // TODO Oppgave 5.1: Filtrer experiences etter type
 setSelectedExperience(selectedFilter);
+```
+```tsx
+ {filteredExperiences()
+          .sort(
+            (a, b) =>
+              new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+          )
+          .map((experience) => (
+            <ExperienceCard key={experience.id} experience={experience} />
+          ))}
 ```
 
 </details>
