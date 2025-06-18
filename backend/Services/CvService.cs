@@ -21,15 +21,14 @@ public class CvService(AppDbContext context) : ICvService
 
     public async Task<IEnumerable<Experience>> GetAllExperiencesAsync()
     {
-        // TODO: Oppgave 2
-        return [];
+        return  context.Experiences;
     } 
 
     public async Task<Experience?> GetExperienceByIdAsync(Guid id)
     {
-        // TODO: Oppgave 2
 
-        return null;
+        return await context.Experiences.FindAsync(id);
+
     }
 
     public async Task<IEnumerable<Experience>> GetExperiencesByTypeAsync(string type)

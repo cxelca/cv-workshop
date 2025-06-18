@@ -1,6 +1,6 @@
 import { User, Experience } from "./types/types";
 
-const API_URL = 'http://localhost:5173';
+const API_URL = 'http://localhost:5007';
 
 export const fetchUsers = async (): Promise<User[]> => {
   try {
