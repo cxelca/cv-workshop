@@ -74,7 +74,7 @@ export default function Experiences() {
         </div>
         <div className={styles.experiences}>
           {/*TODO Oppgave 3.1: Vis alle erfaringene*/}
-          {experiences.map(e => <div className={styles.container}><ExperienceCard key={e.id} experience={e} /></div>)}
+          {/* {experiences.map(e => <div className={styles.container}><ExperienceCard key={e.id} experience={e} /></div>)} */}
 
           {/* TODO Oppgave 4.1: Sorter erfaringene*/}
         </div>
